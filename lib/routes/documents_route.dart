@@ -20,6 +20,7 @@ import 'package:paperless_app/scan.dart';
 import 'package:paperless_app/widgets/correspondent_widget.dart';
 import 'package:paperless_app/widgets/document_type_widget.dart';
 import 'package:paperless_app/widgets/document_preview.dart';
+import 'package:paperless_app/widgets/document_type_widget.dart';
 import 'package:paperless_app/widgets/search_app_bar.dart';
 import 'package:paperless_app/widgets/tag_widget.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -178,7 +179,8 @@ class _DocumentsRouteState extends State<DocumentsRoute> {
               onTap: () {
                 removeCurrentFilter();
                 setState(() {
-                  if (i.runtimeType == OgTag) this.tagFilter = i as Tag?;
+                  if (i.runtimeType == OgTag || i.runtimeType == Tag)
+                    this.tagFilter = i as Tag?;
                   if (i.runtimeType == Correspondent)
                     this.correspondentFilter = i as Correspondent?;
                   if (i.runtimeType == DocumentType)

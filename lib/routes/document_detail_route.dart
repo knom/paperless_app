@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:paperless_app/api.dart';
 import 'package:paperless_app/i18n.dart';
 import 'package:paperless_app/widgets/correspondent_widget.dart';
+import 'package:paperless_app/widgets/customer_drawer_widget.dart';
 import 'package:paperless_app/widgets/document_preview.dart';
 import 'package:paperless_app/widgets/document_type_widget.dart';
 import 'package:paperless_app/widgets/heading.dart';
@@ -136,6 +137,7 @@ class _DocumentDetailRouteState extends State<DocumentDetailRoute> {
           softWrap: false,
         ),
       ),
+      drawer: CustomDrawerWidget(),
       body: SingleChildScrollView(
         child: Column(children: [
           DocumentPreview(

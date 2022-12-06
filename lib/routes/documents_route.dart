@@ -11,13 +11,12 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:paperless_app/delegates/paperless_text_delegate.dart';
 import 'package:paperless_app/i18n.dart';
-import 'package:paperless_app/routes/about_route.dart';
 import 'package:paperless_app/routes/document_detail_route.dart';
 import 'package:paperless_app/routes/select_order_route.dart';
 import 'package:paperless_app/routes/server_details_route.dart';
-import 'package:paperless_app/routes/settings_route.dart';
 import 'package:paperless_app/scan.dart';
 import 'package:paperless_app/widgets/correspondent_widget.dart';
+import 'package:paperless_app/widgets/customer_drawer_widget.dart';
 import 'package:paperless_app/widgets/document_type_widget.dart';
 import 'package:paperless_app/widgets/document_preview.dart';
 import 'package:paperless_app/widgets/document_type_widget.dart';
@@ -25,7 +24,6 @@ import 'package:paperless_app/widgets/search_app_bar.dart';
 import 'package:paperless_app/widgets/tag_widget.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../api.dart';
@@ -377,9 +375,10 @@ class _DocumentsRouteState extends State<DocumentsRoute> {
             onPressed: () {
               removeCurrentFilter();
             })
-        : Padding(
-            child: SvgPicture.asset("assets/logo.svg", color: Colors.white),
-            padding: EdgeInsets.all(13));
+        : IconButton(
+            icon: SvgPicture.asset("assets/logo.svg", color: Colors.white),
+            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          );
     return leading;
   }
 
@@ -432,6 +431,7 @@ class _DocumentsRouteState extends State<DocumentsRoute> {
               _showPicker(context);
             },
             child: Icon(Icons.add)),
+        drawer: CustomDrawerWidget(),
         appBar: SearchAppBar(
             leading: getLeadingAppbarWidget(),
             isSearchOpen: searchOpen,
@@ -444,26 +444,7 @@ class _DocumentsRouteState extends State<DocumentsRoute> {
             actions: <Widget>[
               PopupMenuButton<String>(
                 onSelected: (String selected) async {
-                  if (selected == "settings") {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsRoute()),
-                    );
-                    loadSettings();
-                  } else if (selected == "logout") {
-                    await GetIt.I<FlutterSecureStorage>().deleteAll();
-                    API.instance = null;
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ServerDetailsRoute()),
-                    );
-                  } else if (selected == "about") {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AboutRoute()),
-                    );
-                  } else if (selected == "sort") {
+                  if (selected == "sort") {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => SelectOrderRoute(
@@ -471,23 +452,12 @@ class _DocumentsRouteState extends State<DocumentsRoute> {
                         ordering: ordering,
                       ),
                     );
-                  } else if (selected == "help") {
-                    await launchUrl(Uri.parse(
-                        "https://github.com/bauerj/paperless_app/wiki/Help"));
                   }
                 },
                 itemBuilder: (BuildContext context) {
                   return <PopupMenuItem<String>>[
                     PopupMenuItem<String>(
-                        value: "sort", child: Text("Sort".i18n)),
-                    PopupMenuItem<String>(
-                        value: "settings", child: Text("Settings".i18n)),
-                    PopupMenuItem<String>(
-                        value: "about", child: Text("About".i18n)),
-                    PopupMenuItem<String>(
-                        value: "help", child: Text("Help".i18n)),
-                    PopupMenuItem<String>(
-                        value: "logout", child: Text("Logout".i18n)),
+                        value: "sort", child: Text("Sort".i18n))
                   ];
                 },
               )
